@@ -1,0 +1,27 @@
+{
+  "name": "todo-list",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000T\u0000o\u0000d\u0000o\u0000_\u0000L\u0000i\u0000s\u0000t\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RKY2023/Todo_List.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RKY2023/Todo_List/issues"
+  },
+  "homepage": "https://github.com/RKY2023/Todo_List#readme",
+  "dependencies": {
+    "express": "^4.21.2",
+    "expressjs": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0"
+  }
+}
