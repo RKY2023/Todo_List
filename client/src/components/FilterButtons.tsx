@@ -1,4 +1,4 @@
-import{ Button } from "@heroui/Button"
+import{ Button } from "@heroui/button"
 
 type FilterButtonsProps = {
   filter: "all" | "active" | "completed"
