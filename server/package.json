@@ -4,7 +4,9 @@
   "description": "��#\u0000 \u0000T\u0000o\u0000d\u0000o\u0000_\u0000L\u0000i\u0000s\u0000t\u0000\r\u0000 \u0000",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js",
+    "start-server": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -18,7 +20,11 @@
   },
   "homepage": "https://github.com/RKY2023/Todo_List#readme",
   "dependencies": {
-    "express": "^4.21.2"
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongodb": "^6.13.0",
+    "mongoose": "^8.10.0",
+    "nodemon": "^3.1.9"
   },
   "devDependencies": {
     "@types/node": "^22.13.0"
