@@ -25,8 +25,18 @@ export default function TodoApp() {
     setTodos(todos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)))
   }
   
-  const deleteTodo = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id))
+  const deleteTodo = async (id: number) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`+'/todos')
+      const data = await response.json()
+      if (data.status && data.status === "success") {
+        setTodos(todos.filter((todo) => todo.id !== id))
+      } else {
+        console.error('Failed to delete todo')
+      }
+    } catch (error) {
+      console.error("Error fetching api", error)
+    }
   }
   
   const filteredTodos = todos.filter((todo) => {
