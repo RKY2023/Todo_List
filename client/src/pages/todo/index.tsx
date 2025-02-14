@@ -6,7 +6,7 @@ import TodoList from "../../components/TodoList"
 import FilterButtons from "../../components/FilterButtons"
 
 export type Todo = {
-  id: number
+  _id: string
   title: string
   description: string
   completed: boolean
@@ -18,19 +18,20 @@ export default function TodoApp() {
   const [filter, setFilter] = useState<"all" | "active" | "completed">("all")
   
   const addTodo = (title: string, description: string) => {
-    setTodos([...todos, { id: Date.now(), title, description, completed: false }])
+    setTodos([...todos, { _id: Date.now().toString(), title, description, completed: false }])
   }
   
-  const toggleTodo = (id: number) => {
-    setTodos(todos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)))
+  const toggleTodo = (id: string) => {
+    setTodos(todos.map((todo) => (todo._id === id ? { ...todo, completed: !todo.completed } : todo)))
   }
   
-  const deleteTodo = async (id: number) => {
+  const deleteTodo = async (id: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`+'/todos')
-      const data = await response.json()
-      if (data.status && data.status === "success") {
-        setTodos(todos.filter((todo) => todo.id !== id))
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`+'/todos/'+id, {
+        method: 'DELETE',
+      })
+      if (response.ok && response.status === 204) {
+        setTodos(todos.filter((todo) => todo._id !== id))
       } else {
         console.error('Failed to delete todo')
       }

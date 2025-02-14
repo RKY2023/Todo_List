@@ -3,8 +3,8 @@ import TodoItem from "./TodoItem"
 
 type TodoListProps = {
   todos: Todo[]
-  toggleTodo: (id: number) => void
-  deleteTodo: (id: number) => void
+  toggleTodo: (id: string) => void
+  deleteTodo: (id: string) => void
 }
 
 export default function TodoList({ todos, toggleTodo, deleteTodo }: TodoListProps) {
@@ -15,7 +15,7 @@ export default function TodoList({ todos, toggleTodo, deleteTodo }: TodoListProp
   return (
     <ul className="space-y-2">
       {todos.map((todo) => (
-        <TodoItem key={todo.id} todo={todo} toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
+        <TodoItem key={todo._id} todo={todo} toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
       ))}
     </ul>
   )
