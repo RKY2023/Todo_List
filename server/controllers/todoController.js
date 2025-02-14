@@ -89,6 +89,7 @@ exports.updateTodo = async (req, res) => {
             new: true,
             runValidators: true
         });
+        console.log(req.body, todo  );
         if (!todo) {
             return res.status(404).json({
                 status: 'fail',

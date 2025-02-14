@@ -1,19 +1,27 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 type TodoFormProps = {
   addTodo: (title: string, description: string) => void
+  updateTodo: (id: string, title: string, description: string) => void
+  updateTodoId: string | null
 }
 
-export default function TodoForm({ addTodo }: TodoFormProps) {
+export default function TodoForm({ addTodo, updateTodo, updateTodoId }: TodoFormProps) {
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    let apiURL = `${process.env.NEXT_PUBLIC_API_URL}`+'/todos';
+    if(isUpdateMode) {
+      apiURL = `${process.env.NEXT_PUBLIC_API_URL}`+'/todos/'+updateTodoId;
+      setIsUpdateMode(false);
+    }
     if (title.trim()) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`+'/todos', {
-          method: 'POST',
+        const response = await fetch(apiURL, {
+          method: isUpdateMode ? 'PUT' : 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -22,7 +30,12 @@ export default function TodoForm({ addTodo }: TodoFormProps) {
         })
         if (response.ok) {
           const newTodo = await response.json()
-          addTodo(newTodo.title, newTodo.description)
+          if(isUpdateMode) {
+            updateTodo(newTodo._id, newTodo.title, newTodo.description);
+            setIsUpdateMode(false);
+          } else {
+            addTodo(newTodo.title, newTodo.description)
+          }
           setTitle("")
           setDescription("")
         } else {
@@ -33,6 +46,25 @@ export default function TodoForm({ addTodo }: TodoFormProps) {
       }
     }
   }
+
+  useEffect(() => {
+    if(updateTodoId) {
+      setIsUpdateMode(true);
+      const fetchTodo = async () => {
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`+'/todos/'+updateTodoId)
+          const data = await response.json()
+          if (data.status && data.status === "success") {
+            setTitle(data.data.todo.title);
+            setDescription(data.data.todo.description);
+          }
+        } catch (error) {
+          console.error("Error fetching api", error)
+        }
+      }
+      fetchTodo();
+    }
+  }, [updateTodoId, isUpdateMode]);
 
   return (
     <form onSubmit={handleSubmit} className="mb-4 flex flex-col space-y-4">
@@ -58,7 +90,7 @@ export default function TodoForm({ addTodo }: TodoFormProps) {
         />
       </div>      
       <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105">
-      Add
+      {isUpdateMode ? 'Update' : 'Add'} 
       </button>
     </form>
   )
