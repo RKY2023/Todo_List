@@ -1,5 +1,6 @@
 const path = require("path");
 const express = require("express");
+const cors = require('cors');
 
 require('dotenv').config();
 
@@ -8,10 +9,10 @@ const bodyParser = require("body-parser");
 const todoRoutes = require("./routes/todoRoutes");
 const app = express();
 
-// const mongodbC = require('./test');
-// mongodbC.run();
-
 const port = 3001;
+
+
+app.use(cors());
 
 app.use(bodyParser.json());
 

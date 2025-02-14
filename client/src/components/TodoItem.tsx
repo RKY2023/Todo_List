@@ -16,7 +16,7 @@ export default function TodoItem({ todo, toggleTodo, deleteTodo }: TodoItemProps
         htmlFor={`todo-${todo.id}`}
         className={`${todo.completed ? "line-through text-gray-500" : "text-gray-800"}`}
       >
-        {todo.text}
+        {todo.title}
       </label>
       </div>
       <button
