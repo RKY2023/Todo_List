@@ -1,16 +1,16 @@
 "use client"
 
-import { useState, useEffect } from "react";
-import TodoForm from "../../components/TodoForm";
-import TodoList from "../../components/TodoList";
-import FilterButtons from "../../components/FilterButtons";
-import { useTodos } from "../../store/TodoProvider";
+import { useState, useEffect } from "react"
+import TodoForm from "../../components/TodoForm"
+import TodoList from "../../components/TodoList"
+import FilterButtons from "../../components/FilterButtons"
+import { useTodos } from "../../store/TodoProvider"
 
 export type Todo = {
-  _id: string;
-  title: string;
-  description: string;
-  completed: boolean;
+  _id: string
+  title: string
+  description: string
+  completed: boolean
 };
 
 export default function TodoApp() {
@@ -19,12 +19,12 @@ export default function TodoApp() {
   const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
 
   const addTodo = (title: string, description: string) => {
-    setTodos([...todos, { _id: Date.now().toString(), title, description, completed: false }])
+    dispatch({ type: 'ADD_TODO', payload: { _id: Date.now().toString(), title, description, completed: false } })
   }
 
   const updateTodo = (id: string, title: string, description: string) => {
     setUpdateTodoId(id);
-    setTodos(todos.map((todo) => (todo._id === id ? { ...todo, title, description } : todo)))
+    dispatch({ type: 'UPDATE_TODO', payload: { id, title, description } })
   }
   
   const toggleTodo = async (id: string) => {
@@ -39,7 +39,7 @@ export default function TodoApp() {
           body: JSON.stringify({ completed: !selectedTodo.completed }),
         })
         if (response.ok) {
-          setTodos(todos.map((todo) => (todo._id === id ? { ...todo, completed: !todo.completed } : todo)))
+          dispatch({ type: 'TOGGLE_TODO', payload: selectedTodo._id })
         } else {
           console.error('Failed to mark todo as completed')
         }
@@ -55,7 +55,7 @@ export default function TodoApp() {
         method: 'DELETE',
       })
       if (response.ok && response.status === 204) {
-        setTodos(todos.filter((todo) => todo._id !== id))
+        dispatch({ type: 'REMOVE_TODO', payload: id })
       } else {
         console.error('Failed to delete todo')
       }
@@ -76,7 +76,7 @@ export default function TodoApp() {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`+'/todos')
         const data = await response.json()
         if (data.status && data.status === "success") {
-          setTodos(data.data.todos)
+          dispatch({ type: 'SET_TODOS', payload: data.data.todos });
         } else {
           console.error('Failed to fetch todos')
         }
