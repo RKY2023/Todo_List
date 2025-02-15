@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext, ReactNode, FC } from 'react';
+import React, { useReducer, useContext, ReactNode, FC } from 'react';
 import TodoContext from './TodoContext';
 
 interface Todo {

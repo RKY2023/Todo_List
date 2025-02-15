@@ -35,7 +35,7 @@ export default function TodoApp() {
   }
   
   const toggleTodo = async (id: string) => {
-    let selectedTodo = todos.find((todo) => todo._id === id);
+    const selectedTodo = todos.find((todo) => todo._id === id);
     if(selectedTodo) {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`+'/todos/'+selectedTodo._id, {
@@ -93,7 +93,7 @@ export default function TodoApp() {
     }
 
     fetchTodos()
-  }, [])
+  }, [dispatch])
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-zinc-600 rounded-lg shadow-xl">

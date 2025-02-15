@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useTodos } from '@/store/TodoProvider';
 
 const TodoId: React.FC = () => {
     const router = useRouter();
     const { todoId } = router.query;
-    const { todos } = useTodos();
-    const [todo, setTodo] = useState(null);
-    // console.log('todos', todos);
 
     useEffect(() => {
         if (todoId) {
@@ -16,9 +12,9 @@ const TodoId: React.FC = () => {
         }
     }, [todoId]);
 
-    if (!todo) {
-        return <div>Loading...</div>;
-    }
+    // if (!todo) {
+    //     return <div>Loading...</div>;
+    // }
 
     return (
         <div>
