@@ -15,15 +15,22 @@ export type Todo = {
 
 export default function TodoApp() {
   const { todos, dispatch } = useTodos();
-  const [updateTodoId, setUpdateTodoId] = useState<string | null>(null);
+  const [editableTodo, setEditableTodo] = useState<{ id: string; title: string; description: string } | null>(null);
   const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
 
-  const addTodo = (title: string, description: string) => {
-    dispatch({ type: 'ADD_TODO', payload: { _id: Date.now().toString(), title, description, completed: false } })
+  const addTodo = (id: string, title: string, description: string) => {
+    dispatch({ type: 'ADD_TODO', payload: { _id: id, title, description, completed: false } })
+  }
+
+  const editTodo = (id: string, title: string, description: string) => {
+    setEditableTodo({id, title, description});
+  }
+
+  const editNullTodo = () => {
+    setEditableTodo(null);
   }
 
   const updateTodo = (id: string, title: string, description: string) => {
-    setUpdateTodoId(id);
     dispatch({ type: 'UPDATE_TODO', payload: { id, title, description } })
   }
   
@@ -91,9 +98,9 @@ export default function TodoApp() {
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-zinc-600 rounded-lg shadow-xl">
       <h1 className="text-3xl font-bold mb-6 text-center">Todo App</h1>
-      <TodoForm addTodo={addTodo} updateTodo={updateTodo} updateTodoId={updateTodoId} />
+      <TodoForm addTodo={addTodo} updateTodo={updateTodo} editableTodo={editableTodo} editNullTodo={editNullTodo} />
       <FilterButtons filter={filter} setFilter={setFilter} />
-      <TodoList todos={filteredTodos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} updateTodo={updateTodo} />
+      <TodoList todos={filteredTodos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} editTodo={editTodo} />
     </div>
   );
 }

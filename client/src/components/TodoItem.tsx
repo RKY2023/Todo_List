@@ -5,10 +5,10 @@ type TodoItemProps = {
   todo: Todo
   toggleTodo: (id: string) => void
   deleteTodo: (id: string) => void
-  updateTodo: (id: string, title: string, description: string) => void
+  editTodo: (id: string, title: string, description: string) => void
 }
 
-export default function TodoItem({ todo, toggleTodo, deleteTodo, updateTodo }: TodoItemProps) {
+export default function TodoItem({ todo, toggleTodo, deleteTodo, editTodo }: TodoItemProps) {
   return (
     <li className="flex items-center justify-between bg-gray-100 p-3 rounded-md">
       <div className="flex items-center space-x-2">
@@ -28,7 +28,7 @@ export default function TodoItem({ todo, toggleTodo, deleteTodo, updateTodo }: T
           <Trash2 className="h-4 w-4" />
         </button>
         <button
-          onClick={() => updateTodo(todo._id, todo.title, todo.description)}
+          onClick={() => editTodo(todo._id, todo.title, todo.description)}
           className="text-blue-500 hover:text-blue-700 flex items-center"
         >
           <Pencil className="h-4 w-4" />

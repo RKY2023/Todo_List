@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 
 type TodoFormProps = {
-  addTodo: (title: string, description: string) => void
+  addTodo: (id: string, title: string, description: string) => void
   updateTodo: (id: string, title: string, description: string) => void
-  updateTodoId: string | null
+  editableTodo: {id: string, title: string, description: string} | null
+  editNullTodo: () => void
 }
 
-export default function TodoForm({ addTodo, updateTodo, updateTodoId }: TodoFormProps) {
+export default function TodoForm({ addTodo, updateTodo, editableTodo, editNullTodo }: TodoFormProps) {
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -15,7 +16,7 @@ export default function TodoForm({ addTodo, updateTodo, updateTodoId }: TodoForm
     e.preventDefault()
     let apiURL = `${process.env.NEXT_PUBLIC_API_URL}`+'/todos';
     if(isUpdateMode) {
-      apiURL = `${process.env.NEXT_PUBLIC_API_URL}`+'/todos/'+updateTodoId;
+      apiURL = `${process.env.NEXT_PUBLIC_API_URL}`+'/todos/'+ editableTodo?.id;
       setIsUpdateMode(false);
     }
     if (title.trim()) {
@@ -29,12 +30,16 @@ export default function TodoForm({ addTodo, updateTodo, updateTodoId }: TodoForm
           body: JSON.stringify({ title: title.trim(), description: description.trim() }),
         })
         if (response.ok) {
-          const newTodo = await response.json()
+          const newTodo = await response.json();
+
           if(isUpdateMode) {
-            updateTodo(newTodo._id, newTodo.title, newTodo.description);
+            editNullTodo(); 
             setIsUpdateMode(false);
+            if (editableTodo) {
+              updateTodo(editableTodo.id, title, description);
+            }
           } else {
-            addTodo(newTodo.title, newTodo.description)
+            addTodo(newTodo.data.todo._id, title, description)
           }
           setTitle("")
           setDescription("")
@@ -48,23 +53,18 @@ export default function TodoForm({ addTodo, updateTodo, updateTodoId }: TodoForm
   }
 
   useEffect(() => {
-    if(updateTodoId) {
+    if(editableTodo) {
       setIsUpdateMode(true);
-      const fetchTodo = async () => {
-        try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`+'/todos/'+updateTodoId)
-          const data = await response.json()
-          if (data.status && data.status === "success") {
-            setTitle(data.data.todo.title);
-            setDescription(data.data.todo.description);
-          }
-        } catch (error) {
-          console.error("Error fetching api", error)
+      
+      const setEditableTodo = async () => {
+        if (editableTodo) {
+          setTitle(editableTodo.title);
+          setDescription(editableTodo.description);
         }
       }
-      fetchTodo();
+      setEditableTodo();
     }
-  }, [updateTodoId, isUpdateMode]);
+  }, [editableTodo, isUpdateMode]);
 
   return (
     <form onSubmit={handleSubmit} className="mb-4 flex flex-col space-y-4">
