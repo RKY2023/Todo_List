@@ -7,6 +7,7 @@ require('dotenv').config();
 // const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const todoRoutes = require("./routes/todoRoutes");
+const authRoutes = require("./routes/authRoutes");
 const app = express();
 
 const port = 3001;
@@ -19,6 +20,7 @@ app.use(bodyParser.json());
 // models
 
 // routes
+app.use("/", authRoutes);
 app.use("/todos", todoRoutes);
 
 const WelcomeToExpress = (req, res) => {
