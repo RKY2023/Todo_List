@@ -21,12 +21,18 @@ export default function TodoForm({ addTodo, updateTodo, editableTodo, editNullTo
     }
     if (title.trim()) {
       try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          alert('You need to log in to perform this action.');
+          return;
+        }
+
         const response = await fetch(apiURL, {
           method: isUpdateMode ? 'PUT' : 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
-
           body: JSON.stringify({ title: title.trim(), description: description.trim() }),
         })
         if (response.ok) {

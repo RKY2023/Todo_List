@@ -24,7 +24,12 @@ exports.getDefault = async (req, res) => {
 // Get all todos
 exports.getAllTodos = async (req, res) => {
     try {
-        const todos = await Todo.find();
+        let todos;
+        if (req.user && req.token) {
+            todos = await Todo.find({ user: req.user._id });
+        } else {
+            todos = await Todo.find();
+        }
         res.status(200).json({
             status: 'success',
             results: todos.length,
@@ -43,7 +48,13 @@ exports.getAllTodos = async (req, res) => {
 // Create a new todo
 exports.createTodo = async (req, res) => {
     try {
-        const newTodo = await Todo.create(req.body);
+        let newTodo;
+        if (req.user && req.token) {
+            newTodo = await Todo.create({ ...req.body, user: req.user._id });
+        } else {
+            newTodo = await Todo.create(req.body);
+        }
+
         res.status(201).json({
             status: 'success',
             data: {
