@@ -5,6 +5,7 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
+    const [error, setError] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -29,13 +30,18 @@ const LoginPage = () => {
             })
             if (response.ok) {
               const loginDetails = await response.json();
-              console.log('Login details:', loginDetails)  
+              localStorage.setItem('token', loginDetails.token);
+              if (loginDetails.token) {
+                window.location.href = '/todo';
+              } else {
+                setError(loginDetails.message); 
+              }
               
             } else {
-              console.error('Failed to '+ (isLogin ? 'login' : 'signup'))
+                setError('Failed to '+ (isLogin ? 'login' : 'signup'))
             }
           } catch (error) {
-            console.error('Error:', error)
+            setError('Error:'+ error)
           }
         }
     };
@@ -46,6 +52,7 @@ const LoginPage = () => {
                 <div className="text-center">
                     <h2 className="text-2xl font-bold text-gray-900">{isLogin ? 'Login' : 'Sign Up'}</h2>
                 </div>
+                {error && <div className="text-red-500">{error}</div>}
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {!isLogin && (
                         <div className="space-y-1">
@@ -89,7 +96,7 @@ const LoginPage = () => {
                         {isLogin ? 'Login' : 'Sign Up'}
                     </button>
                 </form>
-                <button onClick={() => setIsLogin(!isLogin)} className="w-full px-4 py-2 text-indigo-600 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <button onClick={() => { setIsLogin(!isLogin); setError('')}} className="w-full px-4 py-2 text-indigo-600 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     {isLogin ? 'Switch to Sign Up' : 'Switch to Login'}
                 </button>
             </div>
